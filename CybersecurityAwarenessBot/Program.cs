@@ -21,6 +21,9 @@ namespace CybersecurityAwarenessBot
             // Question 3 - Get user name and display welcome message
             UserInteraction.GetUserName();
 
+            // Question 4 - Start the chat
+            ChatBot.StartChat();
+
             ReadLine();
         }
     }
