@@ -12,8 +12,14 @@ namespace CybersecurityAwarenessBot
     {
         static void Main(string[] args)
         {
+            // Question 1 - Play voice greeting
             Greeting.PlayVoiceGreeting();
+
+            // Question 2 - Display ASCII art
             AsciiArt.DisplayLogo();
+
+            // Question 3 - Get user name and display welcome message
+            UserInteraction.GetUserName();
 
             ReadLine();
         }
