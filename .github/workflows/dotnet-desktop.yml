@@ -1,0 +1,30 @@
+name: Build Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Step 1: Get the code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up .NET on the GitHub machine
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      # Step 3: Restore NuGet packages
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # Step 4: Build the project
+      - name: Build
+        run: dotnet build --no-restore
