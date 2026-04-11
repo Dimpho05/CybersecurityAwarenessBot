@@ -13,6 +13,7 @@ namespace CybersecurityAwarenessBot
         static void Main(string[] args)
         {
             Greeting.PlayVoiceGreeting();
+            AsciiArt.DisplayLogo();
 
             ReadLine();
         }
