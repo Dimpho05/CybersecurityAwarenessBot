@@ -12,16 +12,16 @@ namespace CybersecurityAwarenessBot
     {
         static void Main(string[] args)
         {
-            // Question 1 - Play voice greeting
+            // Play voice greeting
             Greeting.PlayVoiceGreeting();
 
-            // Question 2 - Display ASCII art
+            //Display ASCII art
             AsciiArt.DisplayLogo();
 
-            // Question 3 - Get user name and display welcome message
+            // Get user name and display welcome message
             UserInteraction.GetUserName();
 
-            // Question 4 - Start the chat
+            // Start the chat
             ChatBot.StartChat();
 
             ReadLine();

@@ -12,19 +12,22 @@ namespace CybersecurityAwarenessBot
     {
         public static void StartChat()
         {
-            WriteLine($"\nHi {UserInteraction.UserName}! Type your question below.");
-            WriteLine("(Type 'exit' to quit)\n");
+            ConsoleUI.PrintHeader($"     How can I help you today?");
+            ForegroundColor = ConsoleColor.Yellow;
+            WriteLine("     Type 'exit' to quit\n");
+            ResetColor();
 
             // Keep the conversation going until user types exit
             while (true)
             {
-                Write($"{UserInteraction.UserName}: ");
+                ConsoleUI.PrintUserPrompt(UserInteraction.UserName);
                 string userInput = ReadLine();
 
                 // Check for exit command
                 if (userInput.ToLower() == "exit")
                 {
-                    WriteLine($"\nBot: Goodbye {UserInteraction.UserName}! Stay safe online!");
+                    ConsoleUI.TypeMessage($"Goodbye {UserInteraction.UserName}! Stay safe online!");
+                    ConsoleUI.PrintBorder();
                     break;
                 }
 
@@ -36,11 +39,16 @@ namespace CybersecurityAwarenessBot
 
                 //Get response from ResponseSystem
                 ResponseSystem.GetResponse(userInput);
-                WriteLine();
+                ConsoleUI.PrintBorder();
             }
         }
     }
 }
+
+
+
+           
+    
 
 
 

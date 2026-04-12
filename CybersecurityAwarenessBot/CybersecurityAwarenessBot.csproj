@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="AsciiArt.cs" />
     <Compile Include="ChatBot.cs" />
+    <Compile Include="ConsoleUI.cs" />
     <Compile Include="Greeting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -19,7 +19,7 @@ namespace CybersecurityAwarenessBot
 
             SoundPlayer player = new SoundPlayer(audioPath);
             player.Load();
-            player.Play();
+            player.PlaySync();
         }
     }
 }

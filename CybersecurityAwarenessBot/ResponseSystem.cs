@@ -16,7 +16,7 @@ namespace CybersecurityAwarenessBot
             // Check if input is empty or just spaces
             if (string.IsNullOrWhiteSpace(userInput))
             {
-                WriteLine("\nBot: Please type something, I did not receive any input!");
+                ConsoleUI.TypeMessage("Please type something, I did not receive any input!");
                 return false;
             }
             return true;
@@ -30,51 +30,60 @@ namespace CybersecurityAwarenessBot
 
             if (input.Contains("how are you"))
             {
-                WriteLine($"\nBot: I am doing great, thank you for asking! I am always ready to help you stay safe online.");
+                ConsoleUI.TypeMessage("I am doing great, thank you for asking! I am always ready to help you stay safe online.");
             }
             else if (input.Contains("purpose") || input.Contains("what do you do"))
             {
-                WriteLine($"\nBot: My purpose is to help you stay safe online! I can educate you about cybersecurity threats and how to avoid them.");
+                ConsoleUI.TypeMessage("My purpose is to help you stay safe online! I can educate you about cybersecurity threats and how to avoid them.");
             }
             else if (input.Contains("what can i ask") || input.Contains("help"))
             {
-                WriteLine("\nBot: You can ask me about:");
+                ConsoleUI.TypeMessage("You can ask me about:");
+                ForegroundColor = ConsoleColor.Yellow;
                 WriteLine("     - Password safety");
                 WriteLine("     - Phishing scams");
                 WriteLine("     - Safe browsing");
                 WriteLine("     - Online privacy");
+                ResetColor();
             }
             else if (input.Contains("password"))
             {
-                WriteLine("\nBot: Here are some password safety tips:");
+                ConsoleUI.TypeMessage("Here are some password safety tips:");
+                ForegroundColor = ConsoleColor.Yellow;
                 WriteLine("     - Use a mix of letters, numbers and symbols");
                 WriteLine("     - Never use personal details like your birthday");
                 WriteLine("     - Use a different password for each account");
                 WriteLine("     - Consider using a password manager");
+                ResetColor();
             }
             else if (input.Contains("phishing"))
             {
-                WriteLine("\nBot: Phishing is when scammers pretend to be trusted organisations to steal your information.");
+                ConsoleUI.TypeMessage("Phishing is when scammers pretend to be trusted organisations to steal your information.");
+                ForegroundColor = ConsoleColor.Yellow;
                 WriteLine("     - Never click suspicious links in emails");
                 WriteLine("     - Always check the sender's email address");
                 WriteLine("     - Do not enter personal details on unknown websites");
+                ResetColor();
             }
             else if (input.Contains("safe browsing") || input.Contains("browsing"))
             {
-                WriteLine("\nBot: Here are some safe browsing tips:");
+                ConsoleUI.TypeMessage("Here are some safe browsing tips:");
+                ForegroundColor = ConsoleColor.Yellow;
                 WriteLine("     - Always look for 'https' in the website address");
                 WriteLine("     - Avoid clicking on pop up ads");
                 WriteLine("     - Keep your browser updated");
                 WriteLine("     - Use a trusted antivirus program");
+                ResetColor();
             }
             else
             {
-                WriteLine("\nBot: I did not quite understand that. Could you rephrase?");
+                ConsoleUI.TypeMessage("I did not quite understand that. Could you rephrase?");
             }
         }
     }
 }
 
-     
+
+
 
 

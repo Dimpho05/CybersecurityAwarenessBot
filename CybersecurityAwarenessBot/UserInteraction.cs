@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
 
+
 namespace CybersecurityAwarenessBot
 {
     internal class UserInteraction
@@ -14,27 +15,31 @@ namespace CybersecurityAwarenessBot
 
         public static void GetUserName()
         {
-            WriteLine("\n===============================================================");
-            WriteLine("       Hello! Welcome to the Cybersecurity Awareness Bot    ");
-            WriteLine("===============================================================\n");
+            ConsoleUI.PrintHeader("Welcome to the Cybersecurity Awareness Bot!");
 
-            WriteLine("Before we begin, may I know your name?");
-            Write("Enter your name: ");
+            ConsoleUI.TypeMessage("Before we begin, may I know your name?");
+            ConsoleUI.PrintUserPrompt("You");
 
             UserName = ReadLine();
 
             // Keep asking until the user enters a valid name
             while (string.IsNullOrWhiteSpace(UserName))
             {
+                ForegroundColor = ConsoleColor.Red;
                 WriteLine("Please enter a valid name.");
-                Write("Enter your name: ");
+                ResetColor();
+                ConsoleUI.PrintUserPrompt("You");
                 UserName = ReadLine();
             }
 
-            WriteLine($"\nNice to meet you, {UserName}!");
-       
+            ConsoleUI.TypeMessage($"Nice to meet you, {UserName}!");
+            ConsoleUI.TypeMessage($"I am here to help you stay safe online, {UserName}.");
+            ConsoleUI.PrintBorder();
         }
     }
 }
+
+
+
 
 
