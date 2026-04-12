@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
 
+
 namespace CybersecurityAwarenessBot
 {
     internal class ChatBot
@@ -20,19 +21,26 @@ namespace CybersecurityAwarenessBot
                 Write($"{UserInteraction.UserName}: ");
                 string userInput = ReadLine();
 
-                // Check if the user wants to exit the chat
+                // Check for exit command
                 if (userInput.ToLower() == "exit")
                 {
                     WriteLine($"\nBot: Goodbye {UserInteraction.UserName}! Stay safe online!");
                     break;
                 }
 
-                // Get the bot's response based on user input
+                // Validate user input
+                if (!ResponseSystem.IsValidInput(userInput))
+                {
+                    continue;
+                }
+
+                //Get response from ResponseSystem
                 ResponseSystem.GetResponse(userInput);
                 WriteLine();
             }
         }
     }
 }
+
 
 

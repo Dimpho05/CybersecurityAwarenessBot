@@ -5,13 +5,27 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
 
+
 namespace CybersecurityAwarenessBot
 {
     internal class ResponseSystem
     {
+        //Input validation
+        public static bool IsValidInput(string userInput)
+        {
+            // Check if input is empty or just spaces
+            if (string.IsNullOrWhiteSpace(userInput))
+            {
+                WriteLine("\nBot: Please type something, I did not receive any input!");
+                return false;
+            }
+            return true;
+        }
+
+        // Basic response system
         public static void GetResponse(string userInput)
         {
-            // Convert user input to lower case for easier matching
+            // Convert to lowercase so we can match regardless of how user types
             string input = userInput.ToLower();
 
             if (input.Contains("how are you"))
@@ -28,7 +42,7 @@ namespace CybersecurityAwarenessBot
                 WriteLine("     - Password safety");
                 WriteLine("     - Phishing scams");
                 WriteLine("     - Safe browsing");
-               
+                WriteLine("     - Online privacy");
             }
             else if (input.Contains("password"))
             {
@@ -60,5 +74,7 @@ namespace CybersecurityAwarenessBot
         }
     }
 }
+
+     
 
 
