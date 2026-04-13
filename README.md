@@ -80,19 +80,19 @@ Once you enter your name you can ask the bot questions like:
 Project Structure
 
 CybersecurityAwarenessBot/
-├── .github/
-│   └── workflows/
-│       └── dotnet-desktop.yml ← CI workflow
-├── CybersecurityAwarenessBot/
-│   ├── Program.cs    ← Entry point
-│   ├── Greeting.cs    ← Voice greeting
-│   ├── AsciiArt.cs    ← ASCII art logo
-│   ├── UserInteraction.cs  ← User name input
-│   ├── ChatBot.cs    ← Chat loop
-│   ├── ResponseSystem.cs  ← Bot responses
-│   ├── ConsoleUI.cs    ← Console styling
-│   └── greeting.wav    ← Voice greeting audio
-└── README.md
+    .github/
+        workflows/
+            dotnet-desktop.yml ← CI workflow
+    CybersecurityAwarenessBot/
+        Program.cs    ← Entry point
+        Greeting.cs    ← Voice greeting
+        AsciiArt.cs    ← ASCII art logo
+        UserInteraction.cs  ← User name input
+        ChatBot.cs    ← Chat loop
+        ResponseSystem.cs  ← Bot responses
+        ConsoleUI.cs    ← Console styling
+        greeting.wav    ← Voice greeting audio
+    README.md
 
 
 CI/CD Workflow
