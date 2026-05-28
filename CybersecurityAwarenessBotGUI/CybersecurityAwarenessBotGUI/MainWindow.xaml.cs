@@ -1,32 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Media;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CybersecurityAwarenessBotGUI
 {
     public partial class MainWindow : Window
     {
         public ObservableCollection<ChatMessage> Messages { get; set; } = new ObservableCollection<ChatMessage>();
+        private UserSession _session = new UserSession();
 
         public MainWindow()
         {
             InitializeComponent();
             ChatHistory.ItemsSource = Messages;
 
+            PlayVoiceGreeting();
+
             Messages.Add(ChatMessage.SystemMessage("[ Welcome to the Cybersecurity Awareness Bot ]"));
-            Messages.Add(ChatMessage.BotMessage("Hello! What is your name?"));
+            Messages.Add(ChatMessage.BotMessage("Hello! Before we begin, what is your name?"));
+        }
+
+        private void PlayVoiceGreeting()
+        {
+            string audioPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
+            if (File.Exists(audioPath))
+            {
+                SoundPlayer player = new SoundPlayer(audioPath);
+                player.Load();
+                player.Play();
+            }
         }
 
         private void SendButton_Click(object sender, RoutedEventArgs e) => ProcessInput();
@@ -51,7 +55,26 @@ namespace CybersecurityAwarenessBotGUI
             Messages.Add(ChatMessage.UserMessage(input));
             UserInputBox.Clear();
 
-            Messages.Add(ChatMessage.BotMessage("(response logic coming in Commit 2)"));
+            // First collect the user's name
+            if (!_session.NameCollected)
+            {
+                _session.UserName = input;
+                _session.NameCollected = true;
+                Messages.Add(ChatMessage.BotMessage($"Nice to meet you, {_session.UserName}! I am here to help you stay safe online."));
+                Messages.Add(ChatMessage.BotMessage("Type 'help' to see what you can ask me about."));
+            }
+            else
+            {
+                // Check for exit
+                if (input.ToLower() == "exit")
+                {
+                    Messages.Add(ChatMessage.BotMessage($"Goodbye {_session.UserName}! Stay safe online!"));
+                    return;
+                }
+
+                string response = ResponseSystem.GetResponse(input);
+                Messages.Add(ChatMessage.BotMessage(response));
+            }
 
             ChatScrollViewer.ScrollToBottom();
         }
