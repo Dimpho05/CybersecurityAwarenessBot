@@ -10,6 +10,7 @@ namespace CybersecurityAwarenessBotGUI
     {
         public ObservableCollection<ChatMessage> Messages { get; set; } = new ObservableCollection<ChatMessage>();
         private UserSession _session = new UserSession();
+        private MemorySystem _memory = new MemorySystem();
 
         public MainWindow()
         {
@@ -55,29 +56,67 @@ namespace CybersecurityAwarenessBotGUI
             Messages.Add(ChatMessage.UserMessage(input));
             UserInputBox.Clear();
 
-            // First collect the user's name
+            // Step 1: Collect name
             if (!_session.NameCollected)
             {
                 _session.UserName = input;
                 _session.NameCollected = true;
+                _memory.Remember("name", input);
                 Messages.Add(ChatMessage.BotMessage($"Nice to meet you, {_session.UserName}! I am here to help you stay safe online."));
                 Messages.Add(ChatMessage.BotMessage("Type 'help' to see what you can ask me about."));
-                Messages.Add(ChatMessage.BotMessage("Type 'exit' to leave the chat at any time."));
+                ChatScrollViewer.ScrollToBottom();
+                return;
             }
-            else
+
+            string lowerInput = input.ToLower();
+
+            // Check for exit
+            if (lowerInput == "exit")
             {
-                // Check for exit
-                if (input.ToLower() == "exit")
+                Messages.Add(ChatMessage.BotMessage($"Goodbye {_session.UserName}! Stay safe online!"));
+                ChatScrollViewer.ScrollToBottom();
+                return;
+            }
+
+            // Memory: detect if user mentions a favourite topic
+            if (lowerInput.Contains("i am interested in") || lowerInput.Contains("i'm interested in"))
+            {
+                string topic = ExtractTopic(lowerInput);
+                if (topic != null)
                 {
-                    Messages.Add(ChatMessage.BotMessage($"Goodbye {_session.UserName}! Stay safe online!"));
+                    _memory.Remember("favourite_topic", topic);
+                    Messages.Add(ChatMessage.BotMessage($"Great! I'll remember that you're interested in {topic}. It's a crucial part of staying safe online."));
+                    ChatScrollViewer.ScrollToBottom();
                     return;
                 }
-
-                string response = ResponseSystem.GetResponse(input);
-                Messages.Add(ChatMessage.BotMessage(response));
             }
 
+            // Memory: recall favourite topic in response
+            string response = ResponseSystem.GetResponse(input);
+
+            // Personalise response using memory
+            if (_memory.Has("favourite_topic"))
+            {
+                string fav = _memory.Recall("favourite_topic");
+                if (!lowerInput.Contains(fav))
+                {
+                    response += $"\n\nAs someone interested in {fav}, you might also want to review your security settings regularly.";
+                }
+            }
+
+            Messages.Add(ChatMessage.BotMessage(response));
             ChatScrollViewer.ScrollToBottom();
+        }
+
+        private string ExtractTopic(string input)
+        {
+            if (input.Contains("password")) return "password safety";
+            if (input.Contains("phishing")) return "phishing";
+            if (input.Contains("privacy")) return "privacy";
+            if (input.Contains("browsing")) return "safe browsing";
+            if (input.Contains("malware")) return "malware";
+            if (input.Contains("2fa") || input.Contains("two factor")) return "two-factor authentication";
+            return null;
         }
     }
 }
