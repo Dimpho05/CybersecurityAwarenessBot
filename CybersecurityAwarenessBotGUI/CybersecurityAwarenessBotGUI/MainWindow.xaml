@@ -1,0 +1,89 @@
+﻿<Window x:Class="CybersecurityAwarenessBotGUI.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:CybersecurityAwarenessBotGUI"
+        Title="Cybersecurity Awareness Bot" Height="700" Width="900"
+        Background="#0D0D1A" WindowStartupLocation="CenterScreen"
+        MinHeight="600" MinWidth="750">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <Border Grid.Row="0" Margin="0,0,0,10">
+            <StackPanel>
+                <TextBlock FontFamily="Consolas" FontSize="18" FontWeight="Bold"
+                           Foreground="#00FFFF" HorizontalAlignment="Center"
+                           Text="[ CYBERSECURITY AWARENESS BOT ]"/>
+                <TextBlock FontFamily="Consolas" FontSize="11"
+                           Foreground="#555577" HorizontalAlignment="Center"
+                           Text="Your guide to staying safe online"/>
+                <Rectangle Height="1" Fill="#00FFFF" Margin="0,8,0,0" Opacity="0.4"/>
+            </StackPanel>
+        </Border>
+
+        <!-- CHAT AREA -->
+        <Border Grid.Row="1" Background="#0A0A14" BorderBrush="#1A1A3E"
+                BorderThickness="1" CornerRadius="8" Margin="0,0,0,10">
+            <ScrollViewer x:Name="ChatScrollViewer"
+                          VerticalScrollBarVisibility="Auto" Padding="10">
+                <ItemsControl x:Name="ChatHistory">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,4,0,4">
+                                <Border MaxWidth="580"
+                                        HorizontalAlignment="{Binding HorizontalAlignment}"
+                                        Background="{Binding Background}"
+                                        CornerRadius="12"
+                                        Padding="12,8">
+                                    <TextBlock Text="{Binding Text}"
+                                               FontFamily="Consolas"
+                                               FontSize="13"
+                                               Foreground="{Binding Foreground}"
+                                               TextWrapping="Wrap"/>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <!-- INPUT AREA -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <TextBlock x:Name="PlaceholderText"
+                           Text="Type here..."
+                           FontFamily="Consolas" FontSize="13"
+                           Foreground="#444466"
+                           Padding="12,9,0,0"
+                           IsHitTestVisible="False"
+                           Panel.ZIndex="1"/>
+                <TextBox x:Name="UserInputBox"
+                         Background="#1A1A2E" Foreground="White"
+                         CaretBrush="White" BorderBrush="#00FFFF"
+                         BorderThickness="1" FontFamily="Consolas"
+                         FontSize="13" Padding="10,8"
+                         VerticalContentAlignment="Center"
+                         KeyDown="UserInputBox_KeyDown"
+                         TextChanged="UserInputBox_TextChanged"/>
+            </Grid>
+
+            <Button x:Name="SendButton" Grid.Column="1"
+                    Content="SEND" Margin="10,0,0,0" Padding="20,8"
+                    Background="#00FFFF" Foreground="#0D0D1A"
+                    FontFamily="Consolas" FontWeight="Bold" FontSize="13"
+                    BorderThickness="0" Cursor="Hand"
+                    Click="SendButton_Click"/>
+        </Grid>
+    </Grid>
+</Window>
