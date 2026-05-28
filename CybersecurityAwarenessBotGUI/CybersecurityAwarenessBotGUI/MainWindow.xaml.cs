@@ -64,6 +64,7 @@ namespace CybersecurityAwarenessBotGUI
                 _memory.Remember("name", input);
                 Messages.Add(ChatMessage.BotMessage($"Nice to meet you, {_session.UserName}! I am here to help you stay safe online."));
                 Messages.Add(ChatMessage.BotMessage("Type 'help' to see what you can ask me about."));
+                Messages.Add(ChatMessage.BotMessage("Type 'exit' to leave the chat at any time."));
                 ChatScrollViewer.ScrollToBottom();
                 return;
             }
@@ -78,6 +79,14 @@ namespace CybersecurityAwarenessBotGUI
                 return;
             }
 
+            // Detect sentiment first
+            var sentiment = SentimentDetector.Detect(input);
+            string sentimentResponse = SentimentDetector.GetSentimentResponse(sentiment, _session.UserName);
+
+            // If sentiment detected, show empathetic message first
+            if (sentimentResponse != null)
+                Messages.Add(ChatMessage.BotMessage(sentimentResponse));
+
             // Memory: detect if user mentions a favourite topic
             if (lowerInput.Contains("i am interested in") || lowerInput.Contains("i'm interested in"))
             {
@@ -91,7 +100,7 @@ namespace CybersecurityAwarenessBotGUI
                 }
             }
 
-            // Memory: recall favourite topic in response
+            // Get topic response
             string response = ResponseSystem.GetResponse(input);
 
             // Personalise response using memory
@@ -99,9 +108,7 @@ namespace CybersecurityAwarenessBotGUI
             {
                 string fav = _memory.Recall("favourite_topic");
                 if (!lowerInput.Contains(fav))
-                {
                     response += $"\n\nAs someone interested in {fav}, you might also want to review your security settings regularly.";
-                }
             }
 
             Messages.Add(ChatMessage.BotMessage(response));

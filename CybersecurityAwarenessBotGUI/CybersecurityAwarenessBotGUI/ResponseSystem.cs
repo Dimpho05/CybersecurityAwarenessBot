@@ -110,7 +110,11 @@ namespace CybersecurityAwarenessBotGUI
                 LastTopic = "malware";
                 return "Malware is malicious software designed to harm your device:\n- Never download software from untrusted sources\n- Keep your operating system updated\n- Use a reputable antivirus program\n- Avoid clicking unknown email attachments";
             }
-
+            if (input.Contains("scam"))
+            {
+                LastTopic = "phishing";
+                return _phishingTips[_random.Next(_phishingTips.Count)];
+            }
             if (input.Contains("two factor") || input.Contains("2fa"))
             {
                 LastTopic = "2fa";

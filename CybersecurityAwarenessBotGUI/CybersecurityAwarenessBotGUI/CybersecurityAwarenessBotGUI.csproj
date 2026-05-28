@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="MemorySystem.cs" />
     <Compile Include="ResponseSystem.cs" />
+    <Compile Include="SentimentDetector.cs" />
     <Compile Include="UserSession.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
