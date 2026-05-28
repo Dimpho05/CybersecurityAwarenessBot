@@ -62,6 +62,7 @@ namespace CybersecurityAwarenessBotGUI
                 _session.NameCollected = true;
                 Messages.Add(ChatMessage.BotMessage($"Nice to meet you, {_session.UserName}! I am here to help you stay safe online."));
                 Messages.Add(ChatMessage.BotMessage("Type 'help' to see what you can ask me about."));
+                Messages.Add(ChatMessage.BotMessage("Type 'exit' to leave the chat at any time."));
             }
             else
             {

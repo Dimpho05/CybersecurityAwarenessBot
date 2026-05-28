@@ -4,42 +4,138 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace CybersecurityAwarenessBotGUI
 {
     public class ResponseSystem
     {
+        private static Random _random = new Random();
+
+        // Store the last topic discussed for follow-up handling
+        public static string LastTopic { get; private set; } = "";
+
+        // Random response lists for varied replies
+        private static List<string> _phishingTips = new List<string>
+        {
+            "Be cautious of emails asking for personal information. Scammers often disguise themselves as trusted organisations.",
+            "Always hover over links before clicking them. The real URL might look suspicious.",
+            "Legitimate companies will never ask for your password via email.",
+            "Watch out for urgent language like 'Your account will be closed!' — this is a common phishing tactic.",
+            "Check the sender's email address carefully. Scammers often use addresses like 'support@paypa1.com'."
+        };
+
+        private static List<string> _passwordTips = new List<string>
+        {
+            "Use a mix of uppercase, lowercase, numbers and symbols in your passwords.",
+            "Never reuse the same password across multiple accounts.",
+            "Consider using a passphrase — a sentence that's easy to remember but hard to guess.",
+            "Use a password manager to generate and store strong, unique passwords.",
+            "Change your passwords immediately if you suspect a breach."
+        };
+
+        private static List<string> _privacyTips = new List<string>
+        {
+            "Review your social media privacy settings regularly.",
+            "Avoid oversharing personal details like your address or phone number online.",
+            "Use a VPN when connecting to public Wi-Fi networks.",
+            "Be careful what permissions you grant to mobile apps.",
+            "Regularly check which apps have access to your accounts and revoke any you no longer use."
+        };
+
+        private static List<string> _safeBrowsingTips = new List<string>
+        {
+            "Always look for 'https' and the padlock icon before entering any personal details.",
+            "Avoid clicking on pop-up ads — they can lead to malicious websites.",
+            "Keep your browser and extensions updated to patch security vulnerabilities.",
+            "Use a trusted antivirus program and keep it updated.",
+            "Be cautious when downloading files — only use official and trusted sources."
+        };
+
         public static string GetResponse(string userInput)
         {
             string input = userInput.ToLower();
 
+            // Follow-up handling
+            if (input.Contains("another tip") || input.Contains("tell me more") ||
+                input.Contains("more") || input.Contains("explain more") ||
+                input.Contains("give me another"))
+            {
+                return GetFollowUpResponse();
+            }
+
             if (input.Contains("how are you"))
+            {
+                LastTopic = "";
                 return "I am doing great, thank you for asking! I am always ready to help you stay safe online.";
+            }
 
             if (input.Contains("purpose") || input.Contains("what do you do"))
+            {
+                LastTopic = "";
                 return "My purpose is to help you stay safe online! I can educate you about cybersecurity threats and how to avoid them.";
+            }
 
             if (input.Contains("help") || input.Contains("what can i ask"))
+            {
+                LastTopic = "";
                 return "You can ask me about:\n- Password safety\n- Phishing scams\n- Safe browsing\n- Online privacy\n- Malware\n- Two factor authentication";
+            }
 
             if (input.Contains("password"))
-                return "Here are some password safety tips:\n- Use a mix of letters, numbers and symbols\n- Never use personal details like your birthday\n- Use a different password for each account\n- Consider using a password manager";
+            {
+                LastTopic = "password";
+                return _passwordTips[_random.Next(_passwordTips.Count)];
+            }
 
             if (input.Contains("phishing"))
-                return "Phishing is when scammers pretend to be trusted organisations to steal your information.\n- Never click suspicious links in emails\n- Always check the sender's email address\n- Do not enter personal details on unknown websites";
+            {
+                LastTopic = "phishing";
+                return _phishingTips[_random.Next(_phishingTips.Count)];
+            }
 
             if (input.Contains("safe browsing") || input.Contains("browsing"))
-                return "Here are some safe browsing tips:\n- Always look for 'https' in the website address\n- Avoid clicking on pop up ads\n- Keep your browser updated\n- Use a trusted antivirus program";
+            {
+                LastTopic = "browsing";
+                return _safeBrowsingTips[_random.Next(_safeBrowsingTips.Count)];
+            }
 
             if (input.Contains("privacy"))
-                return "Protecting your privacy online is important:\n- Review your social media privacy settings\n- Avoid sharing personal details publicly\n- Use a VPN on public Wi-Fi\n- Be careful what apps you give permissions to";
+            {
+                LastTopic = "privacy";
+                return _privacyTips[_random.Next(_privacyTips.Count)];
+            }
 
             if (input.Contains("malware"))
+            {
+                LastTopic = "malware";
                 return "Malware is malicious software designed to harm your device:\n- Never download software from untrusted sources\n- Keep your operating system updated\n- Use a reputable antivirus program\n- Avoid clicking unknown email attachments";
+            }
 
             if (input.Contains("two factor") || input.Contains("2fa"))
+            {
+                LastTopic = "2fa";
                 return "Two-factor authentication (2FA) adds an extra layer of security:\n- Enable 2FA on all important accounts\n- Use an authenticator app instead of SMS when possible\n- Never share your 2FA codes with anyone";
+            }
 
+            LastTopic = "";
             return "I did not quite understand that. Could you rephrase? Type 'help' to see what I can assist with.";
+        }
+
+        private static string GetFollowUpResponse()
+        {
+            switch (LastTopic)
+            {
+                case "password":
+                    return _passwordTips[_random.Next(_passwordTips.Count)];
+                case "phishing":
+                    return _phishingTips[_random.Next(_phishingTips.Count)];
+                case "browsing":
+                    return _safeBrowsingTips[_random.Next(_safeBrowsingTips.Count)];
+                case "privacy":
+                    return _privacyTips[_random.Next(_privacyTips.Count)];
+                default:
+                    return "Could you remind me what topic you'd like more information on? Type 'help' to see available topics.";
+            }
         }
     }
 }
