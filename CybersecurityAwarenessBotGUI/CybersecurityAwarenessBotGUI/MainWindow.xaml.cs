@@ -6,9 +6,14 @@ using System.Windows.Input;
 
 namespace CybersecurityAwarenessBotGUI
 {
+    // Main window code-behind. Handles UI interaction, coordinates between
+    // all system classes and manages the conversation flow.
     public partial class MainWindow : Window
     {
+        // Observable collection so the UI updates automatically when messages are added
         public ObservableCollection<ChatMessage> Messages { get; set; } = new ObservableCollection<ChatMessage>();
+
+        // Core systems
         private UserSession _session = new UserSession();
         private MemorySystem _memory = new MemorySystem();
 
@@ -17,12 +22,15 @@ namespace CybersecurityAwarenessBotGUI
             InitializeComponent();
             ChatHistory.ItemsSource = Messages;
 
+            // Play voice greeting on startup
             PlayVoiceGreeting();
 
+            // Initial bot messages
             Messages.Add(ChatMessage.SystemMessage("[ Welcome to the Cybersecurity Awareness Bot ]"));
             Messages.Add(ChatMessage.BotMessage("Hello! Before we begin, what is your name?"));
         }
 
+        // Plays the WAV voice greeting if the file exists.
         private void PlayVoiceGreeting()
         {
             string audioPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
@@ -41,6 +49,7 @@ namespace CybersecurityAwarenessBotGUI
             if (e.Key == Key.Enter) ProcessInput();
         }
 
+        // Shows or hides the placeholder text based on input box content.
         private void UserInputBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             PlaceholderText.Visibility = string.IsNullOrEmpty(UserInputBox.Text)
@@ -48,15 +57,20 @@ namespace CybersecurityAwarenessBotGUI
                 : Visibility.Collapsed;
         }
 
+        
+        //Core method that processes user input and coordinates responses from the sentiment detector, memory system and response system.
+       
         private void ProcessInput()
         {
             string input = UserInputBox.Text.Trim();
+
+            // Validate input
             if (string.IsNullOrWhiteSpace(input)) return;
 
             Messages.Add(ChatMessage.UserMessage(input));
             UserInputBox.Clear();
 
-            // Step 1: Collect name
+            // Step 1: Collect the user's name first
             if (!_session.NameCollected)
             {
                 _session.UserName = input;
@@ -71,7 +85,7 @@ namespace CybersecurityAwarenessBotGUI
 
             string lowerInput = input.ToLower();
 
-            // Check for exit
+            // Step 2: Check for exit command
             if (lowerInput == "exit")
             {
                 Messages.Add(ChatMessage.BotMessage($"Goodbye {_session.UserName}! Stay safe online!"));
@@ -79,16 +93,14 @@ namespace CybersecurityAwarenessBotGUI
                 return;
             }
 
-            // Detect sentiment first
+            // Step 3: Detect and respond to sentiment
             var sentiment = SentimentDetector.Detect(input);
             string sentimentResponse = SentimentDetector.GetSentimentResponse(sentiment, _session.UserName);
-
-            // If sentiment detected, show empathetic message first
             if (sentimentResponse != null)
                 Messages.Add(ChatMessage.BotMessage(sentimentResponse));
 
-            // Memory: detect if user mentions a favourite topic
-            if (lowerInput.Contains("i am interested in") || lowerInput.Contains("i'm interested in"))
+            // Step 4: Check if user is sharing a favourite topic for memory
+            if (lowerInput.Contains("i am interested in") || lowerInput.Contains("i'm interested in") || lowerInput.Contains("im interested in"))
             {
                 string topic = ExtractTopic(lowerInput);
                 if (topic != null)
@@ -100,10 +112,21 @@ namespace CybersecurityAwarenessBotGUI
                 }
             }
 
-            // Get topic response
-            string response = ResponseSystem.GetResponse(input);
+            // Step 5: Get response from ResponseSystem
+            // If only sentiment words with no cybersecurity keyword, use last topic as fallback
+            bool hasCyberKeyword = input.ToLower().Contains("password") || input.ToLower().Contains("phishing") ||
+                                   input.ToLower().Contains("privacy") || input.ToLower().Contains("malware") ||
+                                   input.ToLower().Contains("browsing") || input.ToLower().Contains("scam") ||
+                                   input.ToLower().Contains("2fa") || input.ToLower().Contains("two factor") ||
+                                   input.ToLower().Contains("help") || input.ToLower().Contains("how are you");
 
-            // Personalise response using memory
+            string response;
+            if (!hasCyberKeyword && sentiment != SentimentDetector.Sentiment.Neutral && ResponseSystem.LastTopic != "")
+                response = ResponseSystem.GetFollowUpResponse();
+            else
+                response = ResponseSystem.GetResponse(input);
+
+            // Step 6: Personalise response using memory if a favourite topic is stored
             if (_memory.Has("favourite_topic"))
             {
                 string fav = _memory.Recall("favourite_topic");
@@ -115,14 +138,17 @@ namespace CybersecurityAwarenessBotGUI
             ChatScrollViewer.ScrollToBottom();
         }
 
+
+        // Extracts a cybersecurity topic from the user's input string.
+
         private string ExtractTopic(string input)
         {
-            if (input.Contains("password")) return "password safety";
-            if (input.Contains("phishing")) return "phishing";
-            if (input.Contains("privacy")) return "privacy";
-            if (input.Contains("browsing")) return "safe browsing";
-            if (input.Contains("malware")) return "malware";
-            if (input.Contains("2fa") || input.Contains("two factor")) return "two-factor authentication";
+            if (input.Contains("password")) { ResponseSystem.SetLastTopic("password"); return "password safety"; }
+            if (input.Contains("phishing")) { ResponseSystem.SetLastTopic("phishing"); return "phishing"; }
+            if (input.Contains("privacy")) { ResponseSystem.SetLastTopic("privacy"); return "privacy"; }
+            if (input.Contains("browsing")) { ResponseSystem.SetLastTopic("browsing"); return "safe browsing"; }
+            if (input.Contains("malware")) { ResponseSystem.SetLastTopic("malware"); return "malware"; }
+            if (input.Contains("2fa") || input.Contains("two factor")) { ResponseSystem.SetLastTopic("2fa"); return "two-factor authentication"; }
             return null;
         }
     }

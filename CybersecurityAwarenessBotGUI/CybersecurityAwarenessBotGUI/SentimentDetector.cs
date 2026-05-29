@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CybersecurityAwarenessBotGUI
 {
+    
+    // Detects the user's sentiment from their input and provides empathetic responses to create a more natural conversation flow.
+    
     public class SentimentDetector
     {
         public enum Sentiment
@@ -16,21 +19,26 @@ namespace CybersecurityAwarenessBotGUI
             Frustrated
         }
 
+        
+        // Analyses user input and returns the detected sentiment.
+       
         public static Sentiment Detect(string input)
         {
             string lower = input.ToLower();
 
+            // Check for worried/anxious sentiment
             if (lower.Contains("worried") || lower.Contains("scared") ||
                 lower.Contains("afraid") || lower.Contains("nervous") ||
                 lower.Contains("anxious") || lower.Contains("concern"))
                 return Sentiment.Worried;
 
+            // Check for curious sentiment
             if (lower.Contains("curious") || lower.Contains("interesting") ||
-                lower.Contains("want to know") || lower.Contains("tell me") ||
-                lower.Contains("how does") || lower.Contains("what is") ||
-                lower.Contains("why"))
+    lower.Contains("want to know") || lower.Contains("how does") ||
+    lower.Contains("what is") || lower.Contains("why"))
                 return Sentiment.Curious;
 
+            // Check for frustrated sentiment
             if (lower.Contains("frustrated") || lower.Contains("annoyed") ||
                 lower.Contains("confused") || lower.Contains("dont understand") ||
                 lower.Contains("don't understand") || lower.Contains("this is hard") ||
@@ -40,6 +48,10 @@ namespace CybersecurityAwarenessBotGUI
             return Sentiment.Neutral;
         }
 
+       
+        //Returns an empathetic opening response based on detected sentiment.
+        //Returns null if sentiment is neutral.
+        
         public static string GetSentimentResponse(Sentiment sentiment, string userName)
         {
             switch (sentiment)
