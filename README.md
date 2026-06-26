@@ -5,7 +5,7 @@ The Cybersecurity Awareness Bot is a console-based chatbot designed to educate
 people about cybersecurity threats and how to avoid them. 
 The bot covers topics such as password safety, phishing scams, safe browsing, 
 and online privacy. This project was developed as part of the PROG6221 
-Programming 2A module at IIE Rosebank.
+Programming 2A module at Rosebank International.
 
 
 
@@ -120,9 +120,98 @@ Features
 - Typing effect for bot messages
 
 
+- **Part 2** is a fully redesigned WPF GUI application that expands on Part 1 with dynamic responses, sentiment detection, memory and recall, and a modern chat bubble interface.
+
+The bot covers topics such as password safety, phishing scams, safe browsing, online privacy, malware, and two-factor authentication.
+
+---
+
+Software Needed
+
+| Software       | Version       | Download                                      |
+|----------------|---------------|-----------------------------------------------|
+| Visual Studio  | 2022 or later | https://visualstudio.microsoft.com/           |
+| .NET Framework | 4.8 or later  | https://dotnet.microsoft.com/download         |
+| Git            | Latest        | https://git-scm.com/downloads                 |
+
+---
+
+How To Run Part 2 (WPF GUI App)
+
+Step 1: Open the GUI Project
+1. Open **Visual Studio**
+2. Click **File** → **Open** → **Project/Solution**
+3. Navigate to the cloned folder
+4. Open the `CybersecurityAwarenessBotGUI` folder
+5. Select **CybersecurityAwarenessBotGUI.sln**
+6. Click **Open**
+
+Step 2: Add the WAV File
+1. Locate the `greeting.wav` file in the project folder
+2. In **Solution Explorer** right-click the project → **Add** → **Existing Item**
+3. Select `greeting.wav`
+4. Click on `greeting.wav` in Solution Explorer and press **F4**
+5. Set **Build Action** to `Content`
+6. Set **Copy to Output Directory** to `Copy Always`
+
+Step 3: Build and Run
+1. Click **Build** → **Build Solution**
+2. Press **F5** or click the green **Start** button
+3. The GUI window will open
+4. The voice greeting will play automatically
+5. Follow the on-screen instructions
+
+---
+
+How To Use The Bot
+
+Starting the Bot
+When the bot launches it will:
+1. Play a voice greeting
+2. Ask for your name
+3. Greet you personally and explain what it can do
+
+Chatting With The Bot
+
+| What You Type                  | What The Bot Does                              |
+|-------------------------------|------------------------------------------------|
+| `your name`                   | Bot greets you personally                      |
+| `how are you`                 | Bot responds with a greeting                   |
+| `what is your purpose`        | Bot explains what it does                      |
+| `help`                        | Bot lists all available topics                 |
+| `password`                    | Bot gives a random password safety tip         |
+| `phishing`                    | Bot gives a random phishing tip                |
+| `scam`                        | Bot gives a phishing/scam tip                  |
+| `safe browsing`               | Bot gives a random safe browsing tip           |
+| `privacy`                     | Bot gives a random privacy tip                 |
+| `malware`                     | Bot explains malware threats                   |
+| `two factor` or `2fa`         | Bot explains two-factor authentication         |
+| `tell me more`                | Bot gives another tip on the current topic     |
+| `give me another tip`         | Bot gives another tip on the current topic     |
+| `I'm interested in privacy`   | Bot remembers your favourite topic             |
+| `I'm worried about scams`     | Bot responds empathetically then gives a tip   |
+| `I'm confused`                | Bot simplifies its explanation                 |
+| `exit`                        | Bot says goodbye                               |
+
+---
+
+Part 2 Features
+
+- **WPF GUI** with dark cybersecurity theme
+- **Chat bubble layout** — bot messages on the left, user messages on the right
+- **Keyword recognition** for 6+ cybersecurity topics
+- **Random responses** — multiple tips per topic for varied conversation
+- **Conversation flow** — follow-up support with "tell me more"
+- **Memory and recall** — remembers your name and favourite topic
+- **Sentiment detection** — detects worried, curious, or frustrated tone and responds empathetically
+- **Voice greeting** on startup
+- **Input validation** and friendly error handling
+
+---
+
 
 Author
 - Student Name: Dimpho Mouba
 - Student Number: ST10492572
 - Module: PROG6221 - Programming 2A
-- Institution: IIE Rosebank
+- Institution: Rosebank International
