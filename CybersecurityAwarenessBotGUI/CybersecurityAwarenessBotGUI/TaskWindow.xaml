@@ -1,0 +1,114 @@
+﻿<Window x:Class="CybersecurityAwarenessBotGUI.TaskWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Task Assistant" Height="650" Width="800"
+        Background="#0D0D1A" WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- HEADER -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="[ TASK ASSISTANT ]" FontFamily="Consolas" FontSize="18"
+                       FontWeight="Bold" Foreground="#00FFFF" HorizontalAlignment="Center"/>
+            <TextBlock Text="Manage your cybersecurity tasks" FontFamily="Consolas"
+                       FontSize="11" Foreground="#555577" HorizontalAlignment="Center"/>
+            <Rectangle Height="1" Fill="#00FFFF" Margin="0,8,0,0" Opacity="0.4"/>
+        </StackPanel>
+
+        <!-- ADD TASK FORM -->
+        <Border Grid.Row="1" Background="#0A0A14" BorderBrush="#1A1A3E"
+                BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="TitleBox" Grid.Row="0" Grid.Column="0"
+                         Margin="0,0,10,10" Padding="8,6"
+                         Background="#1A1A2E" Foreground="White"
+                         BorderBrush="#00FFFF" BorderThickness="1"
+                         FontFamily="Consolas" FontSize="12"
+                         Tag="Task title (e.g. Enable 2FA)"/>
+
+                <TextBox x:Name="DescriptionBox" Grid.Row="0" Grid.Column="1"
+                         Margin="0,0,10,10" Padding="8,6"
+                         Background="#1A1A2E" Foreground="White"
+                         BorderBrush="#00FFFF" BorderThickness="1"
+                         FontFamily="Consolas" FontSize="12"
+                         Tag="Description (optional)"/>
+
+                <DatePicker x:Name="ReminderDatePicker" Grid.Row="0" Grid.Column="2"
+                            Margin="0,0,0,10" Width="150"
+                            Background="#1A1A2E" Foreground="White"
+                            FontFamily="Consolas" FontSize="12"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Title"
+                           Foreground="#555577" FontFamily="Consolas" FontSize="10" Margin="2,0,0,8"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Description"
+                           Foreground="#555577" FontFamily="Consolas" FontSize="10" Margin="2,0,0,8"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="Reminder Date (optional)"
+                           Foreground="#555577" FontFamily="Consolas" FontSize="10" Margin="2,0,0,8"/>
+
+                <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"
+                        Content="+ ADD TASK" Click="AddTask_Click"
+                        Background="#00FFFF" Foreground="#0D0D1A"
+                        FontFamily="Consolas" FontWeight="Bold" FontSize="13"
+                        BorderThickness="0" Padding="0,8" Cursor="Hand"/>
+            </Grid>
+        </Border>
+
+        <!-- TASK LIST -->
+        <Border Grid.Row="2" Background="#0A0A14" BorderBrush="#1A1A3E"
+                BorderThickness="1" CornerRadius="8" Padding="10">
+            <ListView x:Name="TaskListView" Background="Transparent"
+                      BorderThickness="0" Foreground="White"
+                      FontFamily="Consolas" FontSize="12">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Title" Width="180"
+                                        DisplayMemberBinding="{Binding Title}"/>
+                        <GridViewColumn Header="Description" Width="220"
+                                        DisplayMemberBinding="{Binding Description}"/>
+                        <GridViewColumn Header="Reminder" Width="110"
+                                        DisplayMemberBinding="{Binding ReminderDisplay}"/>
+                        <GridViewColumn Header="Status" Width="100"
+                                        DisplayMemberBinding="{Binding StatusDisplay}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Border>
+
+        <!-- ACTION BUTTONS -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal"
+                    HorizontalAlignment="Center" Margin="0,15,0,0">
+            <Button Content="✔ MARK COMPLETE" Click="MarkComplete_Click"
+                    Background="#00FF99" Foreground="#0D0D1A"
+                    FontFamily="Consolas" FontWeight="Bold"
+                    BorderThickness="0" Padding="20,8" Margin="5,0"
+                    Cursor="Hand"/>
+            <Button Content="✖ DELETE TASK" Click="DeleteTask_Click"
+                    Background="#FF4444" Foreground="White"
+                    FontFamily="Consolas" FontWeight="Bold"
+                    BorderThickness="0" Padding="20,8" Margin="5,0"
+                    Cursor="Hand"/>
+            <Button Content="↺ REFRESH" Click="Refresh_Click"
+                    Background="#1A1A2E" Foreground="#00FFFF"
+                    FontFamily="Consolas" FontWeight="Bold"
+                    BorderBrush="#00FFFF" BorderThickness="1"
+                    Padding="20,8" Margin="5,0" Cursor="Hand"/>
+        </StackPanel>
+    </Grid>
+</Window>
