@@ -11,6 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- HEADER -->
@@ -53,8 +54,28 @@
             </ScrollViewer>
         </Border>
 
+        <!-- FEATURE BUTTONS -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    HorizontalAlignment="Center" Margin="0,0,0,10">
+            <Button Content="📋 TASK ASSISTANT" Click="OpenTasks_Click"
+                    Background="#1A1A2E" Foreground="#00FFFF"
+                    FontFamily="Consolas" FontWeight="Bold" FontSize="12"
+                    BorderBrush="#00FFFF" BorderThickness="1"
+                    Padding="15,7" Margin="5,0" Cursor="Hand"/>
+            <Button Content="🎮 QUIZ" Click="OpenQuiz_Click"
+                    Background="#1A1A2E" Foreground="#00FF99"
+                    FontFamily="Consolas" FontWeight="Bold" FontSize="12"
+                    BorderBrush="#00FF99" BorderThickness="1"
+                    Padding="15,7" Margin="5,0" Cursor="Hand"/>
+            <Button Content="📜 ACTIVITY LOG" Click="OpenActivityLog_Click"
+                    Background="#1A1A2E" Foreground="#FFD700"
+                    FontFamily="Consolas" FontWeight="Bold" FontSize="12"
+                    BorderBrush="#FFD700" BorderThickness="1"
+                    Padding="15,7" Margin="5,0" Cursor="Hand"/>
+        </StackPanel>
+
         <!-- INPUT AREA -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>

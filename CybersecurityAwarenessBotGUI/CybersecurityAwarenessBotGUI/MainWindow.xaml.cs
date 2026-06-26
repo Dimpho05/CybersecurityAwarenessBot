@@ -6,14 +6,10 @@ using System.Windows.Input;
 
 namespace CybersecurityAwarenessBotGUI
 {
-    // Main window code-behind. Handles UI interaction, coordinates between
-    // all system classes and manages the conversation flow.
     public partial class MainWindow : Window
     {
-        // Observable collection so the UI updates automatically when messages are added
         public ObservableCollection<ChatMessage> Messages { get; set; } = new ObservableCollection<ChatMessage>();
 
-        // Core systems
         private UserSession _session = new UserSession();
         private MemorySystem _memory = new MemorySystem();
 
@@ -22,15 +18,12 @@ namespace CybersecurityAwarenessBotGUI
             InitializeComponent();
             ChatHistory.ItemsSource = Messages;
 
-            // Play voice greeting on startup
             PlayVoiceGreeting();
 
-            // Initial bot messages
             Messages.Add(ChatMessage.SystemMessage("[ Welcome to the Cybersecurity Awareness Bot ]"));
             Messages.Add(ChatMessage.BotMessage("Hello! Before we begin, what is your name?"));
         }
 
-        // Plays the WAV voice greeting if the file exists.
         private void PlayVoiceGreeting()
         {
             string audioPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "greeting.wav");
@@ -49,7 +42,6 @@ namespace CybersecurityAwarenessBotGUI
             if (e.Key == Key.Enter) ProcessInput();
         }
 
-        // Shows or hides the placeholder text based on input box content.
         private void UserInputBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             PlaceholderText.Visibility = string.IsNullOrEmpty(UserInputBox.Text)
@@ -57,14 +49,33 @@ namespace CybersecurityAwarenessBotGUI
                 : Visibility.Collapsed;
         }
 
-        
-        //Core method that processes user input and coordinates responses from the sentiment detector, memory system and response system.
-       
+        // Opens the Task Assistant window
+        private void OpenTasks_Click(object sender, RoutedEventArgs e)
+        {
+            ActivityLog.Add("User opened Task Assistant");
+            var taskWindow = new TaskWindow();
+            taskWindow.ShowDialog();
+        }
+
+        // Opens the Quiz window
+        private void OpenQuiz_Click(object sender, RoutedEventArgs e)
+        {
+            ActivityLog.Add("User opened Quiz");
+            var quizWindow = new QuizWindow();
+            quizWindow.ShowDialog();
+        }
+
+        // Opens the Activity Log window
+        private void OpenActivityLog_Click(object sender, RoutedEventArgs e)
+        {
+            var logWindow = new ActivityLogWindow();
+            logWindow.ShowDialog();
+        }
+
         private void ProcessInput()
         {
             string input = UserInputBox.Text.Trim();
 
-            // Validate input
             if (string.IsNullOrWhiteSpace(input)) return;
 
             Messages.Add(ChatMessage.UserMessage(input));
@@ -76,9 +87,10 @@ namespace CybersecurityAwarenessBotGUI
                 _session.UserName = input;
                 _session.NameCollected = true;
                 _memory.Remember("name", input);
+                ActivityLog.Add($"User session started for: {_session.UserName}");
                 Messages.Add(ChatMessage.BotMessage($"Nice to meet you, {_session.UserName}! I am here to help you stay safe online."));
                 Messages.Add(ChatMessage.BotMessage("Type 'help' to see what you can ask me about."));
-                Messages.Add(ChatMessage.BotMessage("Type 'exit' to leave the chat at any time."));
+                Messages.Add(ChatMessage.BotMessage("You can also use the buttons below to access the Task Assistant, Quiz, and Activity Log."));
                 ChatScrollViewer.ScrollToBottom();
                 return;
             }
@@ -89,6 +101,7 @@ namespace CybersecurityAwarenessBotGUI
             if (lowerInput == "exit")
             {
                 Messages.Add(ChatMessage.BotMessage($"Goodbye {_session.UserName}! Stay safe online!"));
+                ActivityLog.Add("User ended the chat session");
                 ChatScrollViewer.ScrollToBottom();
                 return;
             }
@@ -106,27 +119,47 @@ namespace CybersecurityAwarenessBotGUI
                 if (topic != null)
                 {
                     _memory.Remember("favourite_topic", topic);
-                    Messages.Add(ChatMessage.BotMessage($"Great! I'll remember that you're interested in {topic}. It's a crucial part of staying safe online."));
+                    Messages.Add(ChatMessage.BotMessage($"Great! I'll remember that you're interested in {topic}."));
+                    ActivityLog.Add($"User interest remembered: {topic}");
                     ChatScrollViewer.ScrollToBottom();
                     return;
                 }
             }
 
             // Step 5: Get response from ResponseSystem
-            // If only sentiment words with no cybersecurity keyword, use last topic as fallback
-            bool hasCyberKeyword = input.ToLower().Contains("password") || input.ToLower().Contains("phishing") ||
-                                   input.ToLower().Contains("privacy") || input.ToLower().Contains("malware") ||
-                                   input.ToLower().Contains("browsing") || input.ToLower().Contains("scam") ||
-                                   input.ToLower().Contains("2fa") || input.ToLower().Contains("two factor") ||
-                                   input.ToLower().Contains("help") || input.ToLower().Contains("how are you");
+            string response = ResponseSystem.GetResponse(input);
 
-            string response;
-            if (!hasCyberKeyword && sentiment != SentimentDetector.Sentiment.Neutral && ResponseSystem.LastTopic != "")
-                response = ResponseSystem.GetFollowUpResponse();
-            else
-                response = ResponseSystem.GetResponse(input);
+            // Step 6: Handle special NLP commands returned by ResponseSystem
+            if (response == "OPEN_TASK_WINDOW")
+            {
+                Messages.Add(ChatMessage.BotMessage("Opening your Task Assistant..."));
+                ChatScrollViewer.ScrollToBottom();
+                ActivityLog.Add("NLP: Opened Task Assistant via chat command");
+                var taskWindow = new TaskWindow();
+                taskWindow.ShowDialog();
+                return;
+            }
 
-            // Step 6: Personalise response using memory if a favourite topic is stored
+            if (response == "OPEN_QUIZ_WINDOW")
+            {
+                Messages.Add(ChatMessage.BotMessage("Starting the Cybersecurity Quiz..."));
+                ChatScrollViewer.ScrollToBottom();
+                ActivityLog.Add("NLP: Opened Quiz via chat command");
+                var quizWindow = new QuizWindow();
+                quizWindow.ShowDialog();
+                return;
+            }
+
+            if (response == "SHOW_ACTIVITY_LOG")
+            {
+                Messages.Add(ChatMessage.BotMessage("Opening your Activity Log..."));
+                ChatScrollViewer.ScrollToBottom();
+                var logWindow = new ActivityLogWindow();
+                logWindow.ShowDialog();
+                return;
+            }
+
+            // Step 7: Personalise response using memory
             if (_memory.Has("favourite_topic"))
             {
                 string fav = _memory.Recall("favourite_topic");
@@ -137,9 +170,6 @@ namespace CybersecurityAwarenessBotGUI
             Messages.Add(ChatMessage.BotMessage(response));
             ChatScrollViewer.ScrollToBottom();
         }
-
-
-        // Extracts a cybersecurity topic from the user's input string.
 
         private string ExtractTopic(string input)
         {
